@@ -162,7 +162,7 @@ public class Hangman {
         return hangmanAuswahl == 6;
     }
 
-    public int printSize() {
+    //public int printSize() {
         return woerter.size();
     }
 
