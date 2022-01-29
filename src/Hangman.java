@@ -162,9 +162,9 @@ public class Hangman {
         return hangmanAuswahl == 6;
     }
 
-    //public int printSize() {
-        return woerter.size();
-    }
+//    public int printSize() {
+//        return woerter.size();
+//    }
 
     public Hangman() throws FileNotFoundException {
         start(ThreadLocalRandom.current().nextInt(0, woerter.size() - 1));
