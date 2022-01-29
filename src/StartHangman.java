@@ -1,8 +1,11 @@
 public class StartHangman {
     public static void main(String[] args) {
-        Hangman man = new Hangman();
-        for (int i = 0; i < 7; i++){
-            System.out.printf("%s%n",man.printHangman(i));
-        }
+        Hangman man = new Hangman(2);
+//        man.start(0);
+//        man.printHangman();
+//        man.buchstabenListe.add('B');
+//        man.checkBuchstabelListe(man.eingabe());
+//        System.out.println(man.checkBuchstabelListe(man.eingabe()));
     }
 }
+
