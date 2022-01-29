@@ -1,7 +1,12 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Hangman {
+
     private final String[] hangman = {
             """
           +---+
@@ -63,14 +68,18 @@ public class Hangman {
     private int hangmanAuswahl = 0;
     private ArrayList<Character> getippteBuchstabenListe = new ArrayList<>();
     private ArrayList<Character> buchstabenListe = new ArrayList<>();
-    private final String[] woerter = {"Haus", "Baum", "Hurensohn"};
-    private int wort;
-    ArrayList<Character> wortChar = new ArrayList<>();
+    private ArrayList<String> woerter = new ArrayList<>() {{
+        Scanner s = new Scanner(new File("src\\words.txt"));
+        while (s.hasNext()) {
+            add(s.next());
+        }
+        s.close();
+    }};
+    private ArrayList<Character> wortChar = new ArrayList<>();
 
     private void start(int wort) {
-        this.wort = wort;
 
-        char[] temp = woerter[wort].toCharArray();
+        char[] temp = woerter.get(wort).toCharArray();
         for (Character i : temp) {
             wortChar.add(Character.toUpperCase(i));
         }
@@ -79,37 +88,37 @@ public class Hangman {
             buchstabenListe.add('_');
         }
 
-        while (gewonnen() != true && verloren() != true) {
+        while (!gewonnen() && !verloren()) {
             System.out.println("\033[H\033[2J");
             System.out.flush();
             printHangman();
             printWort();
 
             char eingabe = eingabe();
-            if (getippteBuchstabenListe.contains(eingabe) == true) {
+            if (getippteBuchstabenListe.contains(eingabe)) {
                 addHangman();
             } else {
-                if (wortChar.contains(eingabe) == false) {
-                    addHangman();
-                } else {
+                if (wortChar.contains(eingabe)) {
                     replaceGetippt(eingabe);
+                } else {
+                    addHangman();
                 }
             }
             getippteBuchstabenListe.add(eingabe);
         }
 
-        if (gewonnen() == true) {
+        if (gewonnen()) {
             System.out.println("\033[H\033[2J");
             System.out.flush();
             printHangman();
             printWort();
             System.out.println("GEWONNEN!");
         }
-        if (verloren() == true) {
+        if (verloren()) {
             System.out.println("\033[H\033[2J");
             System.out.flush();
             printHangman();
-            System.out.printf("Du hast leider verloren!%nDas wort war \"%s\"", woerter[wort]);
+            System.out.printf("Du hast leider verloren!%nDas wort war \"%s\"", woerter.get(wort));
         }
     }
 
@@ -118,7 +127,7 @@ public class Hangman {
             System.out.printf("%s ", i);
         }
 
-        System.out.printf("     %s Woerter!%n", buchstabenListe.size());
+        System.out.printf("     %s Buchstaben!%n", buchstabenListe.size());
     }
 
     private void printHangman() {
@@ -146,22 +155,22 @@ public class Hangman {
     }
 
     private boolean gewonnen() {
-        if (buchstabenListe.equals(wortChar)) {
-            return true;
-        } else {
-            return false;
-        }
+        return buchstabenListe.equals(wortChar);
     }
 
     private boolean verloren() {
-        if (hangmanAuswahl == 6) {
-            return true;
-        } else {
-            return false;
-        }
+        return hangmanAuswahl == 6;
     }
 
-    public Hangman(int i) {
+    public int printSize() {
+        return woerter.size();
+    }
+
+    public Hangman() throws FileNotFoundException {
+        start(ThreadLocalRandom.current().nextInt(0, woerter.size() - 1));
+    }
+
+    public Hangman(int i) throws FileNotFoundException {
         start(i);
     }
 }
